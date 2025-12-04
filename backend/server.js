@@ -1,33 +1,40 @@
 require('dotenv').config();
 const express = require('express');
-const sequelize = require('./config/db'); // Import the DB config we just made
+const sequelize = require('./config/db');
 
 // Import Models
 const User = require('./models/User');
 const Product = require('./models/Product');
 const Group = require('./models/Group');
 
+// Import Routes
+const productRoutes = require('./routes/productRoutes');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.json());
 
+// Register Routes
+// This tells Express: "If the URL starts with /api/products, go to productRoutes.js"
+app.use('/api/products', productRoutes);
+
+// Base Route
 app.get('/', (req, res) => {
     res.send('Food Waste App Backend is Running!');
 });
 
-// The magic starts here
+// Start Server & Connect to DB
 const startServer = async () => {
     try {
-        // 1. Try to connect to the DB
         await sequelize.authenticate();
         console.log('✅ Database connected successfully.');
         
-        // 2. Sync models (we'll add these next)
+        // Sync models
         await sequelize.sync({ alter: true }); 
-        console.log('✅ Models synced (Tables created).');
-        
-        // 3. Start the server
+        console.log('✅ Models synced.');
+
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
