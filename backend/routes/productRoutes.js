@@ -49,4 +49,26 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// GET /api/products/scan/:barcodeg - Fetch product details from OpenFoodFacts
+router.get('/scan/:barcode', async (req, res) => {
+    try {
+        const { barcode } = req.params;
+        // This fetches real data from the OpenFoodFacts API
+        const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+        const data = await response.json();
+        
+        if (data.status === 1) {
+            res.json({
+                name: data.product.product_name,
+                image: data.product.image_url,
+                brand: data.product.brands
+            });
+        } else {
+            res.status(404).json({ error: 'Product not found in external database' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch external data' });
+    }
+});
+
 module.exports = router;
