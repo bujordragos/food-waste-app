@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const User = require('./User'); // We need the User to link them
+const User = require('./User'); // link users
 
 const Group = sequelize.define('Group', {
     id: {
@@ -16,13 +16,13 @@ const Group = sequelize.define('Group', {
         type: DataTypes.STRING
     },
     category: {
-        type: DataTypes.STRING, // e.g., "Vegetarians", "Office"
+        type: DataTypes.STRING, // e.g. "Vegetarians"
         defaultValue: 'General'
     }
 });
 
-// The Magic Many-to-Many Link
-// This creates a hidden table called "UserGroups" to track who is in what group
+// many to many relation
+// junction table
 Group.belongsToMany(User, { through: 'UserGroups' });
 User.belongsToMany(Group, { through: 'UserGroups' });
 

@@ -2,36 +2,35 @@ require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/db');
 
-// Import Models
+// import models
 const User = require('./models/User');
 const Product = require('./models/Product');
 const Group = require('./models/Group');
 
-// Import Routes
+// import routes
 const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// middleware
 app.use(express.json());
 
-// Register Routes
-// This tells Express: "If the URL starts with /api/products, go to productRoutes.js"
+// routes configuration
 app.use('/api/products', productRoutes);
 
-// Base Route
+// base route
 app.get('/', (req, res) => {
     res.send('Food Waste App Backend is Running!');
 });
 
-// Start Server & Connect to DB
+// start server
 const startServer = async () => {
     try {
         await sequelize.authenticate();
         console.log('✅ Database connected successfully.');
         
-        // Sync models
+        // sync models
         await sequelize.sync({ alter: true }); 
         console.log('✅ Models synced.');
 

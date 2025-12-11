@@ -23,8 +23,7 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
-        // In a real app, we hash this. For this stage, plain text is fine 
-        // until we add authentication logic.
+        // plain text for now untill authentication is implemented
     }
 });
 

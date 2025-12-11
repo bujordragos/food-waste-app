@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 
-// GET /api/products - Get all products
+// GET /api/products - get all products
 router.get('/', async (req, res) => {
     try {
         const products = await Product.findAll();
@@ -12,10 +12,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST /api/products - Add a new product to the fridge
+// POST /api/products - add product
 router.post('/', async (req, res) => {
     try {
-        // We assume the user sends data like { name: "Milk", category: "Dairy", ... }
+        // assuming body structure is correct
         const newProduct = await Product.create(req.body);
         res.status(201).json(newProduct);
     } catch (err) {
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PUT /api/products/:id - Update a product (e.g., mark as available)
+// PUT /api/products/:id - update product
 router.put('/:id', async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
@@ -36,7 +36,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE /api/products/:id - Eat/Throw away food
+// DELETE /api/products/:id - delete product
 router.delete('/:id', async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
@@ -49,11 +49,11 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// GET /api/products/scan/:barcodeg - Fetch product details from OpenFoodFacts
+// GET /api/products/scan/:barcode - fetch from openfoodfacts
 router.get('/scan/:barcode', async (req, res) => {
     try {
         const { barcode } = req.params;
-        // This fetches real data from the OpenFoodFacts API
+        // fetch data from external api
         const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
         const data = await response.json();
         

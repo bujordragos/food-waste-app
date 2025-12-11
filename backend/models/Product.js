@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const User = require('./User'); // Import User to link them
+const User = require('./User'); // link to user
 
 const Product = sequelize.define('Product', {
     id: {
@@ -13,23 +13,23 @@ const Product = sequelize.define('Product', {
         allowNull: false
     },
     category: {
-        type: DataTypes.STRING, // e.g., "Dairy", "Vegetables"
+        type: DataTypes.STRING, // e.g. "Dairy"
         allowNull: false
     },
     expirationDate: {
-        type: DataTypes.DATEONLY, // We only care about the date (YYYY-MM-DD), not time
+        type: DataTypes.DATEONLY, // date only
         allowNull: false
     },
     isAvailable: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false // Default is "In my fridge, not for sharing" [cite: 9]
+        defaultValue: false // default false
     }
 });
 
-// Relationships
-// A User has many Products
+// relations
+// user has many products
 User.hasMany(Product, { onDelete: 'CASCADE' });
-// A Product belongs to one User
+// product belongs to user
 Product.belongsTo(User);
 
 module.exports = Product;
