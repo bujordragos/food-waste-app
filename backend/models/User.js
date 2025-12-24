@@ -23,7 +23,7 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
-        // plain text for now untill authentication is implemented
+        // hashed with bcrypt
     }
 });
 

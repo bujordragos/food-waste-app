@@ -58,8 +58,13 @@ router.get('/scan/:barcode', async (req, res) => {
         const data = await response.json();
         
         if (data.status === 1) {
+            // prioritize Romanian or English names if available
+            const name = data.product.product_name_ro || 
+                         data.product.product_name_en || 
+                         data.product.product_name;
+
             res.json({
-                name: data.product.product_name,
+                name: name,
                 image: data.product.image_url,
                 brand: data.product.brands
             });

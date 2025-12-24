@@ -9,6 +9,7 @@ const Group = require('./models/Group');
 
 // import routes
 const productRoutes = require('./routes/productRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,10 +19,11 @@ app.use(express.json());
 
 // routes configuration
 app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
 
 // base route
 app.get('/', (req, res) => {
-    res.send('Food Waste App Backend is Running!');
+    res.send('food waste app backend works!');
 });
 
 // start server
