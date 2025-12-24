@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
+const auth = require('../middleware/auth');
 
-// GET /api/products - get all products
-router.get('/', async (req, res) => {
+// GET /api/products - get all products for the logged-in user
+router.get('/', auth, async (req, res) => {
     try {
-        const products = await Product.findAll();
+        const products = await Product.findAll({ where: { UserId: req.user.id } });
         res.json(products);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -13,10 +14,13 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/products - add product
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
-        // assuming body structure is correct
-        const newProduct = await Product.create(req.body);
+        // link product to the logged-in user
+        const newProduct = await Product.create({
+            ...req.body,
+            UserId: req.user.id
+        });
         res.status(201).json(newProduct);
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -24,7 +28,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/products/:id - update product
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
         if (!product) return res.status(404).json({ error: 'Product not found' });
@@ -37,7 +41,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/products/:id - delete product
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
         if (!product) return res.status(404).json({ error: 'Product not found' });
@@ -50,7 +54,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // GET /api/products/scan/:barcode - fetch from openfoodfacts
-router.get('/scan/:barcode', async (req, res) => {
+router.get('/scan/:barcode', auth, async (req, res) => {
     try {
         const { barcode } = req.params;
         // fetch data from external api
