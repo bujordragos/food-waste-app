@@ -1,3 +1,4 @@
+// main entry point for the backend
 require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/db');
@@ -10,6 +11,7 @@ const Group = require('./models/Group');
 // import routes
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/authRoutes');
+const groupRoutes = require('./routes/groupRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +22,7 @@ app.use(express.json());
 // routes configuration
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/groups', groupRoutes);
 
 // base route
 app.get('/', (req, res) => {
@@ -32,7 +35,7 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('✅ Database connected successfully.');
         
-        // sync models
+        // keeps models in sync with db structure
         await sequelize.sync({ alter: true }); 
         console.log('✅ Models synced.');
 

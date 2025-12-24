@@ -24,6 +24,13 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false
         // hashed with bcrypt
+    },
+    dietaryTags: {
+        type: DataTypes.STRING, // e.g. "Vegetarian, Gluten-free"
+        defaultValue: 'None'
+    },
+    bio: {
+        type: DataTypes.STRING
     }
 });
 

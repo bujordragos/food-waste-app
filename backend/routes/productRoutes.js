@@ -80,4 +80,49 @@ router.get('/scan/:barcode', auth, async (req, res) => {
     }
 });
 
+// PATCH /api/products/:id/available - toggle availability for sharing
+router.patch('/:id/available', auth, async (req, res) => {
+    try {
+        const product = await Product.findByPk(req.params.id);
+        if (!product) return res.status(404).json({ error: 'product not found' });
+        
+        // only owner can share
+        if (product.UserId !== req.user.id) {
+            return res.status(403).json({ error: 'not authorized' });
+        }
+
+        product.isAvailable = !product.isAvailable;
+        await product.save();
+        res.json(product);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// POST /api/products/:id/claim - claim a product
+router.post('/:id/claim', auth, async (req, res) => {
+    try {
+        const product = await Product.findByPk(req.params.id);
+        if (!product) return res.status(404).json({ error: 'product not found' });
+
+        if (!product.isAvailable) {
+            return res.status(400).json({ error: 'product not available for sharing' });
+        }
+
+        // can't claim your own product
+        if (product.UserId === req.user.id) {
+            return res.status(400).json({ error: 'cannot claim your own product' });
+        }
+
+        // transfer ownership to the claimer
+        product.UserId = req.user.id;
+        product.isAvailable = false; // no longer available once claimed
+        await product.save();
+
+        res.json({ message: 'product claimed successfully', product });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;
