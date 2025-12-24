@@ -73,5 +73,5 @@ body {
 
 .input-field:focus {
   border-color: var(--primary);
-  ring: 2px solid rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
