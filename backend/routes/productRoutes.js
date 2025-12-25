@@ -1,7 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
+
+// GET /api/products/explore - get all available products that don't belong to the logged-in user
+router.get('/explore', auth, async (req, res) => {
+    try {
+        const products = await Product.findAll({
+            where: {
+                isAvailable: true,
+                UserId: { [Op.ne]: req.user.id } 
+            },
+            include: [{ model: User, attributes: ['username'] }]
+        });
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // GET /api/products - get all products for the logged-in user
 router.get('/', auth, async (req, res) => {

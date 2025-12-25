@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogOut, Plus, Search, Filter } from 'lucide-react';
+import { Plus, Search, Filter } from 'lucide-react';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
 
 const Dashboard = () => {
-    const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,43 +46,33 @@ const Dashboard = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
-    };
-
     // Group products by category
-    const categories = ['All', ...new Set(products.map(p => p.category))];
+    const categoriesList = ['All', ...new Set(products.map(p => p.category))];
     const filteredProducts = filterCategory === 'All' 
         ? products 
         : products.filter(p => p.category === filterCategory);
 
     return (
-        <div className="min-h-screen pb-12">
-            {/* Header */}
-            <header className="sticky top-0 z-30 bg-white/60 backdrop-blur-md border-b border-gray-100 mb-8">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl font-black text-emerald-600 tracking-tight">ANTIWASTE</h1>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <div className="hidden sm:block text-right">
-                            <p className="text-xs font-bold text-gray-400 uppercase">My Shelf</p>
-                            <p className="font-semibold text-gray-900">{user.username}</p>
-                        </div>
-                        <button onClick={handleLogout} className="p-2.5 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
-                            <LogOut size={22} />
-                        </button>
-                    </div>
+        <div className="min-h-screen">
+            <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h1 className="text-3xl font-black text-gray-900 mb-2">My Fridge</h1>
+                    <p className="text-gray-500">Hello {user.username}, you have {products.length} items.</p>
                 </div>
+                <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className="btn-primary flex items-center justify-center gap-2 shadow-lg shadow-emerald-200"
+                >
+                    <Plus size={20} />
+                    Add Product
+                </button>
             </header>
 
-            <main className="max-w-7xl mx-auto px-6">
+            <main>
                 {/* Actions Row */}
                 <div className="flex flex-col sm:flex-row justify-between gap-4 mb-8">
-                    <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
-                        {categories.map(cat => (
+                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        {categoriesList.map(cat => (
                             <button 
                                 key={cat}
                                 onClick={() => setFilterCategory(cat)}
@@ -98,13 +86,6 @@ const Dashboard = () => {
                             </button>
                         ))}
                     </div>
-                    <button 
-                        onClick={() => setIsModalOpen(true)}
-                        className="btn-primary flex items-center justify-center gap-2 shadow-lg shadow-emerald-200"
-                    >
-                        <Plus size={20} />
-                        Add Product
-                    </button>
                 </div>
 
                 {/* Grid */}
