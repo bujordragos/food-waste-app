@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../utils/api';
-import { LogIn } from 'lucide-react';
+import { LogIn, Sun, Moon } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark');
     const navigate = useNavigate();
+
+    const toggleTheme = () => {
+        const newDark = !isDark;
+        setIsDark(newDark);
+        if (newDark) {
+            document.body.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -22,8 +35,15 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center p-4">
-            <div className="glass p-8 w-full max-w-md space-y-6">
+        <div className="flex flex-col items-center justify-center p-4 min-h-[80vh]">
+            <div className="glass p-8 w-full max-w-md space-y-6 relative">
+                {/* auth-page theme toggle */}
+                <button 
+                    onClick={toggleTheme}
+                    className="absolute top-4 right-4 p-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100/50 text-gray-400 hover:text-emerald-600 transition-all"
+                >
+                    {isDark ? <Sun size={18} className="text-amber-500" /> : <Moon size={18} className="text-indigo-500" />}
+                </button>
                 <div className="text-center">
                     <div className="bg-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <LogIn className="text-emerald-600" size={32} />

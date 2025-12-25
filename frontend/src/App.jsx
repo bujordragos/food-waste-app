@@ -14,9 +14,15 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  React.useEffect(() => {
+    // global theme check
+    const isDark = localStorage.getItem('theme') === 'dark';
+    if (isDark) document.body.classList.add('dark');
+  }, []);
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 text-neutral-900">
+      <div className="min-h-screen">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
