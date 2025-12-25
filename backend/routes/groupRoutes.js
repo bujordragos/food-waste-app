@@ -16,6 +16,23 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
+// GET /api/groups/:id/members - get members of a group
+router.get('/:id/members', auth, async (req, res) => {
+    try {
+        const group = await Group.findByPk(req.params.id, {
+            include: [{ 
+                model: User, 
+                attributes: ['id', 'username', 'email', 'dietaryTags'],
+                through: { attributes: [] } 
+            }]
+        });
+        if (!group) return res.status(404).json({ error: 'group not found' });
+        res.json(group.Users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // POST /api/groups - create a new group
 router.post('/', auth, async (req, res) => {
     try {
