@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Compass, Users, LogOut, Package, X } from 'lucide-react';
+import { LayoutDashboard, Compass, Users, LogOut, Package, X, Settings } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
@@ -61,13 +61,20 @@ const Sidebar = ({ isOpen, onClose }) => {
                     {/* Footer / Profile */}
                     <div className="p-4 border-t border-gray-100">
                         <div className="flex items-center gap-3 px-4 py-3 mb-2">
-                            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold flex-shrink-0">
                                 {user.username?.[0].toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-gray-900 truncate">{user.username}</p>
                                 <p className="text-xs text-gray-400 truncate">Member</p>
                             </div>
+                            <NavLink 
+                                to="/profile" 
+                                className={({ isActive }) => `p-2 rounded-lg transition-all ${isActive ? 'text-emerald-600 bg-emerald-50' : 'text-gray-400 hover:bg-gray-100'}`}
+                                title="Settings"
+                            >
+                                <Settings size={18} />
+                            </NavLink>
                         </div>
                         <button 
                             onClick={handleLogout}

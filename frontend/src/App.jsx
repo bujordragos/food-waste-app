@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Explore from './pages/Explore';
 import Groups from './pages/Groups';
+import Profile from './pages/Profile';
 import Layout from './components/Layout';
 
 const PrivateRoute = ({ children }) => {
@@ -43,6 +44,15 @@ function App() {
             element={
               <PrivateRoute>
                 <Groups />
+              </PrivateRoute>
+            } 
+          />
+
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <Profile />
               </PrivateRoute>
             } 
           />
