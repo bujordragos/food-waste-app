@@ -64,7 +64,7 @@ const Profile = () => {
 
             <form onSubmit={handleUpdate} className="space-y-6">
                 <div className="glass p-8 space-y-6">
-                    {/* Basic Info (Read Only) */}
+                    {/* read-only info */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-6 border-b border-gray-100">
                         <div>
                             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Username</label>
@@ -91,7 +91,7 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* Bio */}
+                    {/* about me */}
                     <div>
                         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2 flex items-center gap-2">
                             <FileText size={14} /> Bio
@@ -104,7 +104,7 @@ const Profile = () => {
                         ></textarea>
                     </div>
 
-                    {/* Dietary Tags */}
+                    {/* food preferences */}
                     <div>
                         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-4 flex items-center gap-2">
                             <Tag size={14} /> Dietary Preferences

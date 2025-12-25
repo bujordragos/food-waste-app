@@ -17,7 +17,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
         <div className={`glass p-5 flex flex-col gap-4 transition-all hover:scale-[1.01] border-l-4 h-full relative group ${
             isExpired() ? 'border-l-red-500' : isExpiringSoon() ? 'border-l-amber-500' : 'border-l-emerald-500'
         }`}>
-            {/* Owner badge for explore mode */}
+            {/* owner badge for explore */}
             {mode === 'explore' && product.User && (
                 <div className="absolute -top-3 right-4 px-2 py-1 rounded-lg bg-white shadow-sm border border-gray-100 flex items-center gap-1.5 z-10">
                     <User size={10} className="text-emerald-500" />
@@ -51,7 +51,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                     </div>
                 </div>
 
-                {/* Only show edit/delete if it's "mine" */}
+                {/* edit/delete for owner */}
                 {mode === 'mine' && (
                     <div className="flex gap-1 flex-shrink-0">
                         <button 
@@ -85,7 +85,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                 </div>
             </div>
 
-            {/* In My Fridge, show status badge + social share. In Explore, show Claim button */}
+            {/* mode-based actions */}
             {mode === 'mine' ? (
                 product.isAvailable ? (
                     <div className="space-y-3">
@@ -93,7 +93,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                             Visible in Market
                         </div>
                         
-                        {/* Social Sharing Mini-Bar */}
+                        {/* social sharing */}
                         <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                             <span className="text-[10px] font-bold text-gray-400 uppercase">Share:</span>
                             <div className="flex gap-1.5">
@@ -110,7 +110,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                         </div>
                     </div>
                 ) : (
-                    // Claimed item in my fridge
+                    // claimed info for fridge
                     product.description?.includes(' | Phone: ') && (
                         <a 
                             href={`https://wa.me/${product.description.split(' | Phone: ')[1].split('.')[0].replace(/\s+/g, '')}?text=${encodeURIComponent('Hi, I claimed your ' + product.name + ' on AntiWaste and would like to arrange pickup!')}`}

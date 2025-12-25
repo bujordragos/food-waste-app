@@ -21,12 +21,11 @@ const Group = sequelize.define('Group', {
     },
     adminId: {
         type: DataTypes.INTEGER,
-        allowNull: true // Changed to true to allow syncing existing DBs
+        allowNull: true // help sync existing data
     }
 });
 
-// many to many relation
-// junction table
+// relationships
 Group.belongsToMany(User, { through: 'UserGroups' });
 User.belongsToMany(Group, { through: 'UserGroups' });
 

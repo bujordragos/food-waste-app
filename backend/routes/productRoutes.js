@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
-// GET /api/products/explore - get all available products that don't belong to the logged-in user
+// get explore products
 router.get('/explore', auth, async (req, res) => {
     try {
         const products = await Product.findAll({
@@ -21,7 +21,7 @@ router.get('/explore', auth, async (req, res) => {
     }
 });
 
-// GET /api/products - get all products for the logged-in user
+// get personal fridge items
 router.get('/', auth, async (req, res) => {
     try {
         const products = await Product.findAll({ where: { UserId: req.user.id } });
@@ -31,10 +31,10 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// POST /api/products - add product
+// add manual product
 router.post('/', auth, async (req, res) => {
     try {
-        // link product to the logged-in user
+        // assign to current user
         const newProduct = await Product.create({
             ...req.body,
             UserId: req.user.id
@@ -45,7 +45,7 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-// PUT /api/products/:id - update product
+// edit product
 router.put('/:id', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
@@ -58,7 +58,7 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-// DELETE /api/products/:id - delete product
+// delete product
 router.delete('/:id', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
@@ -71,16 +71,16 @@ router.delete('/:id', auth, async (req, res) => {
     }
 });
 
-// GET /api/products/scan/:barcode - fetch from openfoodfacts
+// external api scan
 router.get('/scan/:barcode', auth, async (req, res) => {
     try {
         const { barcode } = req.params;
-        // fetch data from external api
+        // openfoodfacts fetch
         const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
         const data = await response.json();
         
         if (data.status === 1) {
-            // prioritize Romanian or English names if available
+            // prioritize ro or en labels
             const name = data.product.product_name_ro || 
                          data.product.product_name_en || 
                          data.product.product_name;
@@ -98,13 +98,12 @@ router.get('/scan/:barcode', auth, async (req, res) => {
     }
 });
 
-// PATCH /api/products/:id/available - toggle availability for sharing
 router.patch('/:id/available', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id);
         if (!product) return res.status(404).json({ error: 'product not found' });
         
-        // only owner can share
+        // ownership check
         if (product.UserId !== req.user.id) {
             return res.status(403).json({ error: 'not authorized' });
         }
@@ -117,7 +116,7 @@ router.patch('/:id/available', auth, async (req, res) => {
     }
 });
 
-// POST /api/products/:id/claim - claim an available product
+// claim marketplace item
 router.post('/:id/claim', auth, async (req, res) => {
     try {
         const product = await Product.findByPk(req.params.id, {
@@ -132,7 +131,7 @@ router.post('/:id/claim', auth, async (req, res) => {
 
         product.UserId = req.user.id;
         product.isAvailable = false;
-        // Store both in description for history
+        // keep seller contact for history
         product.description = `Claimed: ${sellerEmail}${sellerPhone ? ' | Phone: ' + sellerPhone : ''}. ${product.description || ''}`;
         
         await product.save();

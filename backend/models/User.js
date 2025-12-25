@@ -23,17 +23,17 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
-        // hashed with bcrypt
+        // bcrypt hash
     },
     dietaryTags: {
-        type: DataTypes.STRING, // e.g. "Vegetarian, Gluten-free"
+        type: DataTypes.STRING, // e.g. vegan, nut-free
         defaultValue: 'None'
     },
     bio: {
         type: DataTypes.STRING
     },
     phone: {
-        type: DataTypes.STRING, // For WhatsApp integration
+        type: DataTypes.STRING, // for whatsapp
         defaultValue: ''
     }
 });

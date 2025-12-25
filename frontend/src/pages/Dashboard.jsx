@@ -46,7 +46,7 @@ const Dashboard = () => {
         }
     };
 
-    // Group products by category
+    // filter unique categories
     const categoriesList = ['All', ...new Set(products.map(p => p.category))];
     const filteredProducts = filterCategory === 'All' 
         ? products 
@@ -69,7 +69,7 @@ const Dashboard = () => {
             </header>
 
             <main>
-                {/* Actions Row */}
+                {/* category filter */}
                 <div className="flex flex-col sm:flex-row justify-between gap-4 mb-8">
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                         {categoriesList.map(cat => (
@@ -88,7 +88,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Grid */}
+                {/* product display */}
                 {loading ? (
                     <div className="flex justify-center items-center py-20">
                         <div className="w-12 h-12 border-4 border-emerald-600/20 border-t-emerald-600 rounded-full animate-spin"></div>

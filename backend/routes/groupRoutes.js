@@ -4,7 +4,7 @@ const Group = require('../models/Group');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
-// GET /api/groups - get all groups i am part of
+// get all groups i am part of
 router.get('/', auth, async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id, {
@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// GET /api/groups/:id/members - get members of a group
+// get member details
 router.get('/:id/members', auth, async (req, res) => {
     try {
         const group = await Group.findByPk(req.params.id, {
@@ -36,7 +36,7 @@ router.get('/:id/members', auth, async (req, res) => {
     }
 });
 
-// POST /api/groups - create a new group
+// create new group
 router.post('/', auth, async (req, res) => {
     try {
         const { name, description, category } = req.body;
@@ -44,10 +44,10 @@ router.post('/', auth, async (req, res) => {
             name, 
             description, 
             category,
-            adminId: req.user.id // set the creator as admin
+            adminId: req.user.id // creator is admin
         });
         
-        // add the creator to the group
+        // auto-join creator
         await newGroup.addUser(req.user.id);
         
         res.status(201).json(newGroup);
@@ -56,18 +56,18 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-// DELETE /api/groups/:id/members/:userId - remove a member (Admin only)
+// remove a member (admin only)
 router.delete('/:id/members/:userId', auth, async (req, res) => {
     try {
         const group = await Group.findByPk(req.params.id);
         if (!group) return res.status(404).json({ error: 'group not found' });
         
-        // security check: only the admin can remove people
+        // verify admin status
         if (group.adminId !== req.user.id) {
             return res.status(403).json({ error: 'only the group admin can remove members' });
         }
 
-        // prevent admin from removing themselves
+        // prevent self-kick
         if (parseInt(req.params.userId) === req.user.id) {
             return res.status(400).json({ error: 'you cannot remove yourself from the group' });
         }
@@ -82,7 +82,7 @@ router.delete('/:id/members/:userId', auth, async (req, res) => {
     }
 });
 
-// POST /api/groups/:id/join - join an existing group
+// join existing group
 router.post('/:id/join', auth, async (req, res) => {
     try {
         const group = await Group.findByPk(req.params.id);
@@ -95,7 +95,7 @@ router.post('/:id/join', auth, async (req, res) => {
     }
 });
 
-// POST /api/groups/:id/invite - invite a friend by email
+// invite by email
 router.post('/:id/invite', auth, async (req, res) => {
     try {
         const { email } = req.body;

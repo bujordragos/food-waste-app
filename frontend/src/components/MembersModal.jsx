@@ -7,7 +7,7 @@ const MembersModal = ({ isOpen, onClose, group }) => {
     const [adminId, setAdminId] = useState(null);
     const [loading, setLoading] = useState(true);
     
-    // get current user id from localStorage
+    // user auth data
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     const fetchMembers = async () => {
@@ -33,7 +33,7 @@ const MembersModal = ({ isOpen, onClose, group }) => {
         if (!window.confirm('Are you sure you want to remove this member from the group?')) return;
         try {
             await api.delete(`/groups/${group.id}/members/${userId}`);
-            fetchMembers(); // refresh
+            fetchMembers(); // reload
         } catch (err) {
             alert(err.response?.data?.error || 'Failed to remove member');
         }
@@ -83,7 +83,7 @@ const MembersModal = ({ isOpen, onClose, group }) => {
                                             </span>
                                         </div>
                                     </div>
-                                    {/* Action button if admin */}
+                                    {/* admin tools */}
                                     {isAdmin && member.id !== currentUser.id && (
                                         <button 
                                             onClick={() => handleKickMember(member.id)}

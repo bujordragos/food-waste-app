@@ -33,7 +33,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
     return (
         <>
-            {/* Mobile Overlay */}
+            {/* mobile overlay */}
             {isOpen && (
                 <div 
                     className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
@@ -41,10 +41,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                 ></div>
             )}
 
-            {/* Sidebar */}
+            {/* sidebar content */}
             <aside className={`fixed inset-y-0 left-0 w-64 sidebar glass rounded-none border-r border-white/20 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex flex-col h-full">
-                    {/* Header */}
+                    {/* header */}
                     <div className="p-6 flex justify-between items-center">
                         <h1 className="text-xl font-black text-emerald-600 tracking-tighter">ANTIWASTE</h1>
                         <button onClick={onClose} className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
@@ -52,7 +52,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         </button>
                     </div>
 
-                    {/* Navigation */}
+                    {/* navigation */}
                     <nav className="flex-1 px-4 space-y-2 mt-4">
                         {navItems.map((item) => (
                             <NavLink
@@ -71,7 +71,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         ))}
                     </nav>
 
-                    {/* Footer / Profile */}
+                    {/* footer area */}
                     <div className="p-4 border-t border-gray-100">
                         <div className="flex items-center gap-3 px-4 py-3 mb-2">
                             <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold flex-shrink-0">
@@ -90,7 +90,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                             </NavLink>
                         </div>
 
-                        {/* Theme Toggle */}
+                        {/* appearance toggle */}
                         <div className="px-2 mb-2">
                             <button 
                                 onClick={toggleTheme}

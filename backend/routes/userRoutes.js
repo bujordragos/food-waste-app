@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
-// GET /api/users/profile - Get current user profile
+// get profile data
 router.get('/profile', auth, async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id, {
@@ -15,7 +15,7 @@ router.get('/profile', auth, async (req, res) => {
     }
 });
 
-// PATCH /api/users/profile - Update profile
+// update profile data
 router.post('/profile', auth, async (req, res) => {
     try {
         const { bio, dietaryTags, phone } = req.body;
