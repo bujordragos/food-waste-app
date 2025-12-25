@@ -105,7 +105,7 @@ const Groups = () => {
                             <div className="flex gap-2">
                                 <button 
                                     onClick={() => handleViewMembers(group)}
-                                    className="flex-1 py-2.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-100"
+                                    className="btn-primary flex-1 py-2.5 text-sm flex items-center justify-center gap-2"
                                 >
                                     View Members
                                 </button>

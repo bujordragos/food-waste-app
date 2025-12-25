@@ -7,7 +7,7 @@ const auth = require('../middleware/auth');
 router.get('/profile', auth, async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id, {
-            attributes: ['username', 'email', 'dietaryTags', 'bio']
+            attributes: ['username', 'email', 'dietaryTags', 'bio', 'phone']
         });
         res.json(user);
     } catch (err) {
@@ -18,9 +18,9 @@ router.get('/profile', auth, async (req, res) => {
 // PATCH /api/users/profile - Update profile
 router.post('/profile', auth, async (req, res) => {
     try {
-        const { bio, dietaryTags } = req.body;
+        const { bio, dietaryTags, phone } = req.body;
         await User.update(
-            { bio, dietaryTags },
+            { bio, dietaryTags, phone },
             { where: { id: req.user.id } }
         );
         res.json({ message: 'Profile updated successfully' });

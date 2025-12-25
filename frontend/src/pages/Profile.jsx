@@ -7,6 +7,7 @@ const Profile = () => {
         username: '',
         email: '',
         bio: '',
+        phone: '',
         dietaryTags: 'None'
     });
     const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const Profile = () => {
         try {
             await api.post('/users/profile', {
                 bio: profile.bio,
+                phone: profile.phone,
                 dietaryTags: profile.dietaryTags
             });
             setMessage('Profile updated successfully!');
@@ -76,6 +78,16 @@ const Profile = () => {
                             <div className="text-gray-500 text-sm bg-gray-50 p-3 rounded-xl border border-gray-100 truncate">
                                 {profile.email}
                             </div>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Phone (for WhatsApp)</label>
+                            <input 
+                                type="text" 
+                                className="input-field" 
+                                placeholder="+40 7xx xxx xxx"
+                                value={profile.phone || ''}
+                                onChange={(e) => setProfile({...profile, phone: e.target.value})}
+                            />
                         </div>
                     </div>
 

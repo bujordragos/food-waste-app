@@ -33,6 +33,21 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                     <div className="min-w-0">
                         <h3 className="font-bold text-gray-800 leading-tight truncate px-1" title={product.name}>{product.name}</h3>
                         <p className="text-xs text-gray-400 font-medium px-1 mt-0.5">{product.brand || 'No brand'}</p>
+                        {product.description?.match(/Claimed( from)?: /) && (
+                            <div className="mt-2 px-2 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-lg text-[10px] font-bold border border-indigo-100 dark:border-indigo-500/20">
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="opacity-70 text-[8px] uppercase tracking-wider">Original Owner Contact</span>
+                                    <span className="truncate">
+                                        {product.description.split('.')[0].replace(/Claimed( from)?: /, '').split(' | ')[0]}
+                                    </span>
+                                    {product.description.includes(' | Phone: ') && (
+                                        <span className="text-emerald-500 dark:text-emerald-400">
+                                            {product.description.split(' | Phone: ')[1].split('.')[0]}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -72,7 +87,7 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
 
             {/* In My Fridge, show status badge + social share. In Explore, show Claim button */}
             {mode === 'mine' ? (
-                product.isAvailable && (
+                product.isAvailable ? (
                     <div className="space-y-3">
                         <div className="py-1 px-3 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-full self-start inline-block">
                             Visible in Market
@@ -94,14 +109,40 @@ const ProductCard = ({ product, onToggleAvailable, onDelete, onClaim, mode = 'mi
                             </div>
                         </div>
                     </div>
+                ) : (
+                    // Claimed item in my fridge
+                    product.description?.includes(' | Phone: ') && (
+                        <a 
+                            href={`https://wa.me/${product.description.split(' | Phone: ')[1].split('.')[0].replace(/\s+/g, '')}?text=${encodeURIComponent('Hi, I claimed your ' + product.name + ' on AntiWaste and would like to arrange pickup!')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100"
+                        >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.407 3.481 2.241 2.242 3.48 5.226 3.481 8.408-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.3 1.656zm6.29-4.115l.356.212c1.453.864 3.124 1.319 4.839 1.32h.01c5.728 0 10.39-4.661 10.393-10.39 0-2.779-1.082-5.391-3.048-7.357-1.966-1.966-4.577-3.048-7.356-3.048-5.729 0-10.391 4.661-10.393 10.39 0 1.832.481 3.622 1.391 5.21l.232.404-.97 3.543 3.635-.954z"/></svg>
+                            Contact for Pickup
+                        </a>
+                    )
                 )
             ) : (
-                <button 
-                    onClick={() => onClaim(product.id)}
-                    className="btn-primary w-full py-2.5 mt-2 text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-100"
-                >
-                    Claim This Item
-                </button>
+                <div className="space-y-2">
+                    {product.User?.phone && (
+                        <a 
+                            href={`https://wa.me/${product.User.phone.replace(/\s+/g, '')}?text=${encodeURIComponent('Hi ' + product.User.username + ', I saw your ' + product.name + ' on AntiWaste and I am interested!')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full py-2 border border-emerald-100 text-emerald-600 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors"
+                        >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.407 3.481 2.241 2.242 3.48 5.226 3.481 8.408-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.3 1.656zm6.29-4.115l.356.212c1.453.864 3.124 1.319 4.839 1.32h.01c5.728 0 10.39-4.661 10.393-10.39 0-2.779-1.082-5.391-3.048-7.357-1.966-1.966-4.577-3.048-7.356-3.048-5.729 0-10.391 4.661-10.393 10.39 0 1.832.481 3.622 1.391 5.21l.232.404-.97 3.543 3.635-.954z"/></svg>
+                            WhatsApp Chat
+                        </a>
+                    )}
+                    <button 
+                        onClick={() => onClaim(product.id)}
+                        className="btn-primary w-full py-2.5 text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-100"
+                    >
+                        Claim This Item
+                    </button>
+                </div>
             )}
         </div>
     );

@@ -13,7 +13,7 @@ router.get('/explore', auth, async (req, res) => {
                 isAvailable: true,
                 UserId: { [Op.ne]: req.user.id } 
             },
-            include: [{ model: User, attributes: ['username'] }]
+            include: [{ model: User, attributes: ['username', 'phone'] }]
         });
         res.json(products);
     } catch (err) {
@@ -117,27 +117,26 @@ router.patch('/:id/available', auth, async (req, res) => {
     }
 });
 
-// POST /api/products/:id/claim - claim a product
+// POST /api/products/:id/claim - claim an available product
 router.post('/:id/claim', auth, async (req, res) => {
     try {
-        const product = await Product.findByPk(req.params.id);
+        const product = await Product.findByPk(req.params.id, {
+            include: [{ model: User, attributes: ['email', 'phone'] }]
+        });
         if (!product) return res.status(404).json({ error: 'product not found' });
+        if (!product.isAvailable) return res.status(400).json({ error: 'product not available' });
+        if (product.UserId === req.user.id) return res.status(400).json({ error: 'cannot claim your own product' });
 
-        if (!product.isAvailable) {
-            return res.status(400).json({ error: 'product not available for sharing' });
-        }
+        const sellerEmail = product.User.email; 
+        const sellerPhone = product.User.phone || '';
 
-        // can't claim your own product
-        if (product.UserId === req.user.id) {
-            return res.status(400).json({ error: 'cannot claim your own product' });
-        }
-
-        // transfer ownership to the claimer
         product.UserId = req.user.id;
-        product.isAvailable = false; // no longer available once claimed
+        product.isAvailable = false;
+        // Store both in description for history
+        product.description = `Claimed: ${sellerEmail}${sellerPhone ? ' | Phone: ' + sellerPhone : ''}. ${product.description || ''}`;
+        
         await product.save();
-
-        res.json({ message: 'product claimed successfully', product });
+        res.json({ message: 'product claimed successfully', contact: sellerEmail, phone: sellerPhone });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

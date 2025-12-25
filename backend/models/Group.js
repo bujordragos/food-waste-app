@@ -16,8 +16,12 @@ const Group = sequelize.define('Group', {
         type: DataTypes.STRING
     },
     category: {
-        type: DataTypes.STRING, // e.g. "Vegetarians"
+        type: DataTypes.STRING, 
         defaultValue: 'General'
+    },
+    adminId: {
+        type: DataTypes.INTEGER,
+        allowNull: true // Changed to true to allow syncing existing DBs
     }
 });
 

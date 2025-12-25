@@ -31,6 +31,10 @@ const User = sequelize.define('User', {
     },
     bio: {
         type: DataTypes.STRING
+    },
+    phone: {
+        type: DataTypes.STRING, // For WhatsApp integration
+        defaultValue: ''
     }
 });
 
